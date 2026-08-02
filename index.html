@@ -1,294 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<title>Digital Shop</title>
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link rel="stylesheet" href="style.css">
-
+    <title>Digital Shop Login</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+<div class="box">
 
-<div class="loader" id="loader"></div>
+<h2>Digital Shop</h2>
 
+<div id="loginBox">
+<h3>Login</h3>
 
-<!-- LOGIN -->
-
-<div class="container" id="shop">
-
-<h1>🛒 Digital Shop</h1>
-
-
-<input id="user" placeholder="Email">
-
-
-<input id="pass" type="password" placeholder="Password">
-
+<input id="loginEmail" type="email" placeholder="Email">
+<input id="loginPassword" type="password" placeholder="Password">
 
 <button onclick="login()">Login</button>
 
+<p onclick="showRegister()">Create Account</p>
+<p onclick="forgotPassword()">Forgot Password?</p>
+
+</div>
+
+
+<div id="registerBox" style="display:none">
+
+<h3>Register</h3>
+
+<input id="regName" placeholder="Name">
+<input id="regEmail" type="email" placeholder="Email">
+<input id="regPassword" type="password" placeholder="Password">
 
 <button onclick="register()">Register</button>
 
+<p onclick="showLogin()">Already have account?</p>
 
 </div>
-
-
-
-
-
-<!-- DASHBOARD -->
-
-<div class="dashboard" id="dashboard">
-
-
-<h1>👤 Dashboard</h1>
-
-
-<h3>
-Welcome:
-<span id="username"></span>
-</h3>
-
-
-
-<div class="balance">
-
-💰 Balance: ৳
-<span id="balance">0</span>
-
-</div>
-
-
-
-
-
-<h2>🛍️ Products</h2>
-
-
-<div id="products"></div>
-
-
-
-
-
-
-<!-- CART -->
-
-<div class="cart">
-
-
-<h3>🛒 Cart Items</h3>
-
-
-<div id="cartItems">
-
-No Items
-
-</div>
-
-
-<p>
-Items:
-<span id="cartCount">0</span>
-</p>
-
-
-<p>
-Total: ৳
-<span id="total">0</span>
-</p>
 
 
 </div>
 
 
-
-
-
-
-
-<!-- ADD BALANCE -->
-
-<div class="checkout">
-
-
-<h2>💰 Add Balance</h2>
-
-
-<p>
-Send Money:
-</p>
-
-
-<p>
-bKash/Nagad: <b>01876872469</b>
-</p>
-
-
-
-<input id="amount" placeholder="Amount">
-
-
-<input id="payNumber" placeholder="Your bKash/Nagad Number">
-
-
-<input id="trxId" placeholder="Transaction ID">
-
-
-<select id="method">
-
-<option>bKash</option>
-
-<option>Nagad</option>
-
-</select>
-
-
-
-<button onclick="requestBalance()">
-
-Submit Request ✅
-
-</button>
-
-
-</div>
-
-
-
-
-
-
-
-
-<!-- CHECKOUT -->
-
-
-<div class="checkout">
-
-
-<h2>🧾 Order Checkout</h2>
-
-
-<input id="cname" placeholder="Name">
-
-
-<input id="phone" placeholder="Phone">
-
-
-<input id="address" placeholder="Address">
-
-
-<button onclick="placeOrder()">
-
-Place Order ✅
-
-</button>
-
-
-</div>
-
-
-
-
-
-
-
-<!-- ADMIN PANEL -->
-
-
-<div class="adminBox" id="adminPanel" style="display:none;">
-
-
-<h1>👑 Admin Panel</h1>
-
-
-
-<h3>Add Product</h3>
-
-
-<input id="pname" placeholder="Product Name">
-
-
-<input id="pprice" placeholder="Price">
-
-
-<input id="pimage" placeholder="Image URL">
-
-
-<button onclick="addProduct()">
-
-Add Product ➕
-
-</button>
-
-
-
-
-<h3>Products</h3>
-
-
-<div id="adminProducts"></div>
-
-
-
-
-<h3>💰 Balance Requests</h3>
-
-
-<div id="balanceRequests"></div>
-
-
-
-</div>
-
-
-
-
-
-
-
-<button onclick="logout">
-
-Logout
-
-</button>
-
-
-
-</div>
-
-
-
-
-
-
-
-
-<script>
-
-
-setTimeout(()=>{
-
-loader.style.display="none";
-
-shop.style.display="block";
-
-
-},2000);
-
-
-</script>
-
-
-
-<script type="module" src="script.js"></script>
-
+<script type="module" src="app.js"></script>
 
 </body>
 </html>
