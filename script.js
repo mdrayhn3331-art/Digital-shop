@@ -50,7 +50,7 @@ const adminEmail = "mdrayhn3331@gmail.com";
 
 
 
-// Initialize Firebase
+// Firebase Start
 
 const app = initializeApp(firebaseConfig);
 
@@ -64,13 +64,12 @@ const db = getFirestore(app);
 
 // Register
 
-window.register = function(){
+window.register=function(){
 
 
-let email = document.getElementById("user").value;
+let email=document.getElementById("user").value;
 
-let password = document.getElementById("pass").value;
-
+let password=document.getElementById("pass").value;
 
 
 if(email=="" || password==""){
@@ -89,19 +88,13 @@ email,
 password
 )
 
-
 .then(()=>{
 
 
-alert("Account Created Successfully ✅");
+alert("Account Created ✅");
 
 
-document.getElementById("shop").style.display="none";
-
-document.getElementById("dashboard").style.display="block";
-
-
-document.getElementById("username").innerHTML=email;
+showDashboard(email);
 
 
 loadUserProducts();
@@ -123,15 +116,16 @@ alert(error.message);
 
 
 
+
 // Login
 
 
-window.login = function(){
+window.login=function(){
 
 
-let email = document.getElementById("user").value;
+let email=document.getElementById("user").value;
 
-let password = document.getElementById("pass").value;
+let password=document.getElementById("pass").value;
 
 
 
@@ -148,43 +142,25 @@ password
 alert("Login Success 🎉");
 
 
-
-document.getElementById("shop").style.display="none";
-
-
-document.getElementById("dashboard").style.display="block";
+showDashboard(email);
 
 
-document.getElementById("username").innerHTML=email;
+loadUserProducts();
 
 
-
-
-// Admin Check
-
-if(email === adminEmail){
-
+if(email===adminEmail){
 
 document.getElementById("adminPanel").style.display="block";
 
-
 loadProducts();
-
 
 }
 
 else{
 
-
 document.getElementById("adminPanel").style.display="none";
 
-
 }
-
-
-
-
-loadUserProducts();
 
 
 
@@ -193,11 +169,29 @@ loadUserProducts();
 
 .catch((error)=>{
 
-
 alert(error.message);
 
-
 });
+
+
+}
+
+
+
+
+
+
+// Dashboard Show
+
+function showDashboard(email){
+
+
+document.getElementById("shop").style.display="none";
+
+document.getElementById("dashboard").style.display="block";
+
+
+document.getElementById("username").innerHTML=email;
 
 
 }
@@ -210,7 +204,7 @@ alert(error.message);
 // Logout
 
 
-window.logout = function(){
+window.logout=function(){
 
 
 signOut(auth)
@@ -241,27 +235,27 @@ alert("Logout Success ✅");
 
 
 
-// ADD PRODUCT ADMIN
+// Add Product Admin
 
 
 window.addProduct=function(){
 
 
-let name = document.getElementById("pname").value;
+let name=document.getElementById("pname").value;
 
-let price = document.getElementById("pprice").value;
+let price=document.getElementById("pprice").value;
+
+let image=document.getElementById("pimage").value;
+
 
 
 if(name=="" || price==""){
 
-
 alert("Fill Product Info");
-
 
 return;
 
 }
-
 
 
 
@@ -270,7 +264,9 @@ addDoc(collection(db,"products"),{
 
 name:name,
 
-price:price
+price:price,
+
+image:image
 
 
 })
@@ -283,7 +279,6 @@ alert("Product Added ✅");
 
 
 loadProducts();
-
 
 loadUserProducts();
 
@@ -299,7 +294,7 @@ loadUserProducts();
 
 
 
-// ADMIN PRODUCT LIST
+// Admin Product List
 
 
 window.loadProducts=function(){
@@ -308,8 +303,7 @@ window.loadProducts=function(){
 let box=document.getElementById("adminProducts");
 
 
-if(!box) return;
-
+if(!box)return;
 
 
 box.innerHTML="";
@@ -326,14 +320,19 @@ snapshot.forEach((item)=>{
 let data=item.data();
 
 
-
-box.innerHTML += `
+box.innerHTML+=`
 
 <div class="card">
 
+
+<img src="${data.image}" style="width:100%;border-radius:15px;">
+
+
 <h3>${data.name}</h3>
 
+
 <p>Price: $${data.price}</p>
+
 
 
 <button onclick="removeProduct('${item.id}')">
@@ -345,6 +344,7 @@ Delete ❌
 
 </div>
 
+
 `;
 
 
@@ -362,9 +362,7 @@ Delete ❌
 
 
 
-
-
-// USER PRODUCT SHOW
+// User Product Show
 
 
 window.loadUserProducts=function(){
@@ -373,11 +371,10 @@ window.loadUserProducts=function(){
 let box=document.getElementById("products");
 
 
-if(!box) return;
+if(!box)return;
 
 
 box.innerHTML="";
-
 
 
 getDocs(collection(db,"products"))
@@ -392,9 +389,12 @@ let data=item.data();
 
 
 
-box.innerHTML += `
+box.innerHTML+=`
 
 <div class="card">
+
+
+<img src="${data.image}" style="width:100%;border-radius:15px;">
 
 
 <h3>${data.name}</h3>
@@ -403,9 +403,10 @@ box.innerHTML += `
 <p>Price: $${data.price}</p>
 
 
-<button>
 
-Buy Now 🛒
+<button onclick="addCart('${data.name}',${data.price})">
+
+Add Cart 🛒
 
 </button>
 
@@ -429,8 +430,7 @@ Buy Now 🛒
 
 
 
-
-// DELETE PRODUCT
+// Delete Product
 
 
 window.removeProduct=function(id){
@@ -451,6 +451,73 @@ loadUserProducts();
 
 
 });
+
+
+}
+
+
+
+
+
+
+
+// Cart System
+
+
+let cartCount=0;
+
+let total=0;
+
+
+
+window.addCart=function(name,price){
+
+
+cartCount++;
+
+total += Number(price);
+
+
+
+document.getElementById("cartCount").innerHTML=cartCount;
+
+document.getElementById("total").innerHTML=total;
+
+
+
+alert(name+" Added To Cart ✅");
+
+
+}
+
+
+
+
+
+
+// Order
+
+
+window.placeOrder=function(){
+
+
+let name=document.getElementById("cname").value;
+
+let phone=document.getElementById("phone").value;
+
+
+
+if(name=="" || phone==""){
+
+alert("Fill Checkout Info");
+
+return;
+
+}
+
+
+
+alert("Order Placed Successfully ✅");
 
 
 }
