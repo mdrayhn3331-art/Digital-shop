@@ -53,7 +53,7 @@ const auth = getAuth(app);
 
 const db = getFirestore(app);
 
-
+const paymentNumber = "01876872469";
 
 // ================= REGISTER =================
 
@@ -699,7 +699,7 @@ window.requestBalance=function(){
 
 let amount=document.getElementById("amount").value;
 
-let number=document.getElementById("payNumber").value;
+let number = paymentNumber;
 
 let trx=document.getElementById("trxId").value;
 
