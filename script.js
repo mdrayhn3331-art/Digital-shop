@@ -66,7 +66,6 @@ const db = getFirestore(app);
 
 window.register=function(){
 
-
 let email=document.getElementById("user").value;
 
 let password=document.getElementById("pass").value;
@@ -81,29 +80,19 @@ return;
 }
 
 
-
-createUserWithEmailAndPassword(
-auth,
-email,
-password
-)
+createUserWithEmailAndPassword(auth,email,password)
 
 .then(()=>{
 
-
 alert("Account Created ✅");
-
 
 showDashboard(email);
 
-
 loadUserProducts();
-
 
 })
 
-
-.catch((error)=>{
+.catch(error=>{
 
 alert(error.message);
 
@@ -119,9 +108,7 @@ alert(error.message);
 
 // Login
 
-
 window.login=function(){
-
 
 let email=document.getElementById("user").value;
 
@@ -129,12 +116,7 @@ let password=document.getElementById("pass").value;
 
 
 
-signInWithEmailAndPassword(
-auth,
-email,
-password
-)
-
+signInWithEmailAndPassword(auth,email,password)
 
 .then(()=>{
 
@@ -146,6 +128,7 @@ showDashboard(email);
 
 
 loadUserProducts();
+
 
 
 if(email===adminEmail){
@@ -167,7 +150,7 @@ document.getElementById("adminPanel").style.display="none";
 })
 
 
-.catch((error)=>{
+.catch(error=>{
 
 alert(error.message);
 
@@ -181,20 +164,17 @@ alert(error.message);
 
 
 
-// Dashboard Show
 
 function showDashboard(email){
-
 
 document.getElementById("shop").style.display="none";
 
 document.getElementById("dashboard").style.display="block";
 
-
 document.getElementById("username").innerHTML=email;
 
-
 }
+
 
 
 
@@ -209,15 +189,10 @@ window.logout=function(){
 
 signOut(auth)
 
-
 .then(()=>{
 
 
 document.getElementById("dashboard").style.display="none";
-
-
-document.getElementById("adminPanel").style.display="none";
-
 
 document.getElementById("shop").style.display="block";
 
@@ -235,7 +210,9 @@ alert("Logout Success ✅");
 
 
 
-// Add Product Admin
+
+
+// ADD PRODUCT ADMIN
 
 
 window.addProduct=function(){
@@ -261,10 +238,9 @@ return;
 
 addDoc(collection(db,"products"),{
 
-
 name:name,
 
-price:price,
+price:Number(price),
 
 image:image
 
@@ -294,7 +270,9 @@ loadUserProducts();
 
 
 
-// Admin Product List
+
+
+// SHOW ADMIN PRODUCTS
 
 
 window.loadProducts=function(){
@@ -311,13 +289,14 @@ box.innerHTML="";
 
 getDocs(collection(db,"products"))
 
-.then((snapshot)=>{
+.then(snapshot=>{
 
 
-snapshot.forEach((item)=>{
+snapshot.forEach(item=>{
 
 
 let data=item.data();
+
 
 
 box.innerHTML+=`
@@ -325,7 +304,7 @@ box.innerHTML+=`
 <div class="card">
 
 
-<img src="${data.image}" style="width:100%;border-radius:15px;">
+<img src="${data.image}" width="100%">
 
 
 <h3>${data.name}</h3>
@@ -344,7 +323,6 @@ Delete ❌
 
 </div>
 
-
 `;
 
 
@@ -362,7 +340,10 @@ Delete ❌
 
 
 
-// User Product Show
+
+
+
+// SHOW USER PRODUCTS
 
 
 window.loadUserProducts=function(){
@@ -377,12 +358,13 @@ if(!box)return;
 box.innerHTML="";
 
 
+
 getDocs(collection(db,"products"))
 
-.then((snapshot)=>{
+.then(snapshot=>{
 
 
-snapshot.forEach((item)=>{
+snapshot.forEach(item=>{
 
 
 let data=item.data();
@@ -394,7 +376,7 @@ box.innerHTML+=`
 <div class="card">
 
 
-<img src="${data.image}" style="width:100%;border-radius:15px;">
+<img src="${data.image}" width="100%">
 
 
 <h3>${data.name}</h3>
@@ -404,7 +386,7 @@ box.innerHTML+=`
 
 
 
-<button onclick="addCart('${data.name}',${data.price})">
+<button class="cartBtn">
 
 Add Cart 🛒
 
@@ -420,6 +402,29 @@ Add Cart 🛒
 });
 
 
+
+
+document.querySelectorAll(".cartBtn").forEach((btn,index)=>{
+
+
+btn.onclick=function(){
+
+
+let item=[...snapshot.docs][index];
+
+let data=item.data();
+
+
+addCart(data.name,data.price);
+
+
+}
+
+
+});
+
+
+
 });
 
 
@@ -430,14 +435,15 @@ Add Cart 🛒
 
 
 
-// Delete Product
+
+
+// DELETE PRODUCT
 
 
 window.removeProduct=function(id){
 
 
 deleteDoc(doc(db,"products",id))
-
 
 .then(()=>{
 
@@ -461,7 +467,7 @@ loadUserProducts();
 
 
 
-// Cart System
+// CART
 
 
 let cartCount=0;
@@ -475,11 +481,13 @@ window.addCart=function(name,price){
 
 cartCount++;
 
+
 total += Number(price);
 
 
 
 document.getElementById("cartCount").innerHTML=cartCount;
+
 
 document.getElementById("total").innerHTML=total;
 
@@ -495,7 +503,9 @@ alert(name+" Added To Cart ✅");
 
 
 
-// Order
+
+
+// ORDER
 
 
 window.placeOrder=function(){
@@ -514,7 +524,6 @@ alert("Fill Checkout Info");
 return;
 
 }
-
 
 
 alert("Order Placed Successfully ✅");
