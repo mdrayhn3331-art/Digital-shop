@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Digital Shop</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+
+body{
+
+min-height:100vh;
+
+background:linear-gradient(45deg,#020617,#0f172a,#003344);
+
+color:white;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+}
+
+
+/* Loading */
+
+.loader{
+
+width:80px;
+height:80px;
+
+border:8px solid #333;
+
+border-top:8px solid #00ffcc;
+
+border-radius:50%;
+
+animation:spin 1s linear infinite;
+
+}
+
+
+@keyframes spin{
+
+100%{
+transform:rotate(360deg);
+}
+
+}
+
+
+
+/* Box */
+
+.container,
+.dashboard{
+
+display:none;
+
+width:350px;
+
+background:rgba(255,255,255,.08);
+
+backdrop-filter:blur(15px);
+
+padding:25px;
+
+border-radius:20px;
+
+box-shadow:0 0 25px #00ffcc;
+
+}
+
+
+
+h1{
+
+text-align:center;
+
+color:#00ffcc;
+
+}
+
+
+
+input,select{
+
+width:100%;
+
+padding:12px;
+
+margin:10px 0;
+
+border:none;
+
+border-radius:10px;
+
+}
+
+
+
+button{
+
+width:100%;
+
+padding:12px;
+
+margin-top:10px;
+
+border:none;
+
+border-radius:20px;
+
+background:#00ffcc;
+
+font-weight:bold;
+
+cursor:pointer;
+
+}
+
+
+button:hover{
+
+transform:scale(1.05);
+
+}
+
+
+
+/* Cards */
+
+.balance,
+.cart,
+.card,
+.checkout{
+
+background:rgba(255,255,255,.1);
+
+padding:15px;
+
+margin-top:15px;
+
+border-radius:15px;
+
+}
+
+
+
+.card{
+
+text-align:center;
+
+}
+
+
+
+.card img{
+
+width:100%;
+
+border-radius:15px;
+
+}
+
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+
+<!-- Loading -->
+
+<div class="loader" id="loader"></div>
+
+
+
+
+<!-- Login -->
+
+
+<div class="container" id="shop">
+
+
+<h1>🛒 Digital Shop</h1>
+
+
+<input id="user" placeholder="Email">
+
+
+<input id="pass" type="password" placeholder="Password">
+
+
+<button onclick="login()">
+
+Login
+
+</button>
+
+
+<button onclick="register()">
+
+Register
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+<!-- User Dashboard -->
+
+
+<div class="dashboard" id="dashboard">
+
+
+<h1>👤 Dashboard</h1>
+
+
+<h3>
+
+Welcome:
+<span id="username"></span>
+
+</h3>
+
+
+
+<div class="balance">
+
+💰 Balance: $
+
+<span id="balance">
+0
+</span>
+
+</div>
+
+
+
+
+<h2>🛍️ Products</h2>
+
+
+
+
+<div class="card">
+
+
+<img src="https://via.placeholder.com/300">
+
+
+<h3>Premium App</h3>
+
+
+<p>Price: $10</p>
+
+
+<button onclick="addCart('Premium App',10)">
+
+Add Cart
+
+</button>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<img src="https://via.placeholder.com/300">
+
+
+<h3>Game Topup</h3>
+
+
+<p>Price: $5</p>
+
+
+<button onclick="addCart('Game Topup',5)">
+
+Add Cart
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+<!-- Cart -->
+
+
+<div class="cart">
+
+🛒 Cart:
+
+<span id="cartCount">
+
+0
+
+</span>
+
+
+<br>
+
+
+💰 Total: $
+
+<span id="total">
+
+0
+
+</span>
+
+
+</div>
+
+
+
+
+
+
+<!-- Checkout -->
+
+
+<div class="checkout">
+
+
+<h2>🧾 Checkout</h2>
+
+
+<input id="cname" placeholder="Name">
+
+
+<input id="phone" placeholder="Phone">
+
+
+<input id="address" placeholder="Address">
+
+
+<select id="payment">
+
+
+<option>
+
+Cash on Delivery
+
+</option>
+
+
+<option>
+
+Mobile Banking
+
+</option>
+
+
+</select>
+
+
+
+<button onclick="placeOrder()">
+
+Place Order ✅
+
+</button>
+
+
+</div>
+
+
+
+
+
+<!-- Admin Panel -->
+
+
+<div class="dashboard" id="adminPanel" style="display:none;">
+
+
+<h1>👑 Admin Panel</h1>
+
+
+<input id="pname" placeholder="Product Name">
+
+
+<input id="pprice" placeholder="Product Price">
+
+
+
+<button onclick="addProduct()">
+
+Add Product ➕
+
+</button>
+
+
+
+<h3>Product List</h3>
+
+
+<div id="adminProducts"></div>
+
+
+
+</div>
+
+
+
+
+
+<button onclick="logout()">
+
+Logout
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+<script>
+
+
+setTimeout(()=>{
+
+
+document.getElementById("loader").style.display="none";
+
+
+document.getElementById("shop").style.display="block";
+
+
+},2500);
+
+
+
+</script>
+
+
+
+<script type="module" src="script.js"></script>
+
+
+
+</body>
+  </html>
