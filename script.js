@@ -18,7 +18,8 @@ addDoc,
 getDocs,
 deleteDoc,
 doc,
-updateDoc
+updateDoc,
+getDoc
 }
 from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
@@ -54,6 +55,7 @@ const db=getFirestore(app);
 
 
 
+
 // REGISTER
 
 window.register=function(){
@@ -75,11 +77,9 @@ loadProducts();
 
 })
 
-
 .catch(e=>alert(e.message));
 
 }
-
 
 
 
@@ -111,7 +111,7 @@ loadProducts();
 
 if(email===adminEmail){
 
-adminPanel.style.display="block";
+document.getElementById("adminPanel").style.display="block";
 
 loadAdminProducts();
 
@@ -124,7 +124,6 @@ loadBalanceRequests();
 
 .catch(e=>alert(e.message));
 
-
 }
 
 
@@ -133,11 +132,11 @@ loadBalanceRequests();
 
 function showDashboard(email){
 
-shop.style.display="none";
+document.getElementById("shop").style.display="none";
 
-dashboard.style.display="block";
+document.getElementById("dashboard").style.display="block";
 
-username.innerHTML=email;
+document.getElementById("username").innerHTML=email;
 
 }
 
@@ -165,18 +164,15 @@ shop.style.display="block";
 
 
 
-
-
-// ADD PRODUCT
+// ADD PRODUCT ADMIN
 
 window.addProduct=function(){
 
+let name=document.getElementById("pname").value;
 
-let name=pname.value;
+let price=document.getElementById("pprice").value;
 
-let price=pprice.value;
-
-let image=pimage.value;
+let image=document.getElementById("pimage").value;
 
 
 
@@ -198,370 +194,7 @@ loadAdminProducts();
 
 loadProducts();
 
-
 });
 
-}
-
-
-
-
-
-
-// SHOW PRODUCTS USER
-
-function loadProducts(){
-
-
-let box=document.getElementById("products");
-
-
-if(!box)return;
-
-
-box.innerHTML="";
-
-
-getDocs(collection(db,"products"))
-
-.then(s=>{
-
-
-s.forEach(item=>{
-
-
-let p=item.data();
-
-
-box.innerHTML+=`
-
-<div class="card">
-
-<img src="${p.image}">
-
-<h3>${p.name}</h3>
-
-<p>Price: ৳${p.price}</p>
-
-
-<button onclick="addCart('${p.name}',${p.price})">
-
-Add Cart 🛒
-
-</button>
-
-
-</div>
-
-`;
-
-
-});
-
-
-});
-
-
-}
-
-
-
-
-
-// ADMIN PRODUCTS
-
-function loadAdminProducts(){
-
-let box=document.getElementById("adminProducts");
-
-
-if(!box)return;
-
-
-box.innerHTML="";
-
-
-getDocs(collection(db,"products"))
-
-.then(s=>{
-
-
-s.forEach(item=>{
-
-
-let p=item.data();
-
-
-box.innerHTML+=`
-
-<div class="card">
-
-<h3>${p.name}</h3>
-
-<p>৳${p.price}</p>
-
-
-<button onclick="deleteProduct('${item.id}')">
-
-Delete ❌
-
-</button>
-
-
-</div>
-
-`;
-
-
-});
-
-
-});
-
-
-}
-
-
-
-
-
-window.deleteProduct=function(id){
-
-
-deleteDoc(doc(db,"products",id))
-
-.then(()=>{
-
-loadAdminProducts();
-
-loadProducts();
-
-});
-
-
-}
-
-
-
-
-
-
-
-// CART
-
-
-let cart=[];
-
-
-window.addCart=function(name,price){
-
-
-cart.push({
-
-name:name,
-
-price:Number(price)
-
-});
-
-
-showCart();
-
-
-alert("Added ✅");
-
-
-}
-
-
-
-
-function showCart(){
-
-
-cartItems.innerHTML="";
-
-
-let total=0;
-
-
-cart.forEach(i=>{
-
-
-total+=i.price;
-
-
-cartItems.innerHTML+=`
-
-<p>${i.name} - ৳${i.price}</p>
-
-`;
-
-
-});
-
-
-cartCount.innerHTML=cart.length;
-
-total.innerHTML=total;
-
-
-}
-
-
-
-
-
-
-// BALANCE REQUEST
-
-
-window.requestBalance=function(){
-
-
-let amount=document.getElementById("amount").value;
-
-let number=document.getElementById("payNumber").value;
-
-let trx=document.getElementById("trxId").value;
-
-let method=document.getElementById("method").value;
-
-
-
-addDoc(collection(db,"balanceRequests"),{
-
-
-amount:Number(amount),
-
-number:number,
-
-trx:trx,
-
-method:method,
-
-status:"pending"
-
-
-})
-
-
-.then(()=>{
-
-alert("Request Sent ✅");
-
-});
-
-
-}
-
-
-
-
-
-
-
-// ADMIN BALANCE REQUEST
-
-
-function loadBalanceRequests(){
-
-
-let box=document.getElementById("balanceRequests");
-
-
-getDocs(collection(db,"balanceRequests"))
-
-.then(s=>{
-
-
-box.innerHTML="";
-
-
-s.forEach(item=>{
-
-
-let d=item.data();
-
-
-box.innerHTML+=`
-
-<div class="card">
-
-
-<p>
-${d.method} 
-${d.number}
-</p>
-
-
-<p>
-Amount: ৳${d.amount}
-</p>
-
-
-<p>
-TRX: ${d.trx}
-</p>
-
-
-<button onclick="approve('${item.id}')">
-
-Approve ✅
-
-</button>
-
-
-</div>
-
-`;
-
-
-});
-
-
-});
-
-
-}
-
-
-
-
-
-window.approve=function(id){
-
-
-updateDoc(doc(db,"balanceRequests",id),{
-
-
-status:"approved"
-
-
-})
-
-.then(()=>{
-
-alert("Approved ✅");
-
-loadBalanceRequests();
-
-
-});
-
-
-}
-
-
-
-
-
-
-
-// ORDER
-
-window.placeOrder=function(){
-
-alert("Order Placed ✅");
 
 }
