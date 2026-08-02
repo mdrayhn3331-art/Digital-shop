@@ -13,21 +13,17 @@
 <body>
 
 
-<!-- Loading -->
-
 <div class="loader" id="loader"></div>
 
 
 
-<!-- Login -->
+<!-- LOGIN -->
 
 <div class="container" id="shop">
 
 <h1>🛒 Digital Shop</h1>
 
-
 <input id="user" placeholder="Email">
-
 
 <input id="pass" type="password" placeholder="Password">
 
@@ -47,7 +43,8 @@ Register
 
 
 
-<!-- User Dashboard -->
+
+<!-- DASHBOARD -->
 
 <div class="dashboard" id="dashboard">
 
@@ -64,77 +61,115 @@ Welcome:
 
 <div class="balance">
 
-💰 Balance:
-$
-<span id="balance">0</span>
+💰 Balance: $
+
+<span id="balance">
+0
+</span>
 
 </div>
+
 
 
 
 <h2>🛍️ Products</h2>
 
 
-<div id="products"></div>
+<div id="products">
+
+</div>
 
 
 
 
+
+
+<!-- CART -->
 
 <div class="cart">
 
+
 <h3>🛒 Cart Items</h3>
 
+
 <div id="cartItems">
-No items
+
+No items added
+
 </div>
 
-<br>
+
+
+<p>
 
 Items:
-<span id="cartCount">0</span>
+<span id="cartCount">
+0
+</span>
 
-<br>
+</p>
+
+
+<p>
 
 Total: $
-<span id="total">0</span>
+
+<span id="total">
+0
+</span>
+
+</p>
+
 
 </div>
 
 
 
 
+
+
+
+<!-- CHECKOUT -->
+
 <div class="checkout">
+
 
 <h2>🧾 Checkout</h2>
 
 
-<input id="cname" placeholder="Name">
+<input id="cname" placeholder="Your Name">
 
 
-<input id="phone" placeholder="Phone">
+<input id="phone" placeholder="Phone Number">
 
 
 <input id="address" placeholder="Address">
 
 
+
 <select id="payment">
+
 
 <option>
 Cash on Delivery
 </option>
 
+
 <option>
 Mobile Banking
 </option>
+
 
 </select>
 
 
 
 <button onclick="placeOrder()">
+
 Place Order ✅
+
 </button>
+
 
 
 </div>
@@ -142,10 +177,13 @@ Place Order ✅
 
 
 
-<!-- Admin Panel -->
 
 
-<div id="adminPanel" style="display:none;">
+
+<!-- ADMIN PANEL -->
+
+
+<div class="adminBox" id="adminPanel" style="display:none;">
 
 
 <h1>👑 Admin Panel</h1>
@@ -157,36 +195,50 @@ Place Order ✅
 <input id="pprice" placeholder="Product Price">
 
 
-<input id="pimage" placeholder="Product Image URL">
+<input id="pimage" placeholder="Image URL">
 
 
 
 <button onclick="addProduct()">
+
 Add Product ➕
+
 </button>
 
 
 
 <h3>
-Product List
+Products
 </h3>
 
 
-<div id="adminProducts"></div>
+
+<div id="adminProducts">
+
+</div>
 
 
 
 </div>
+
+
+
 
 
 
 
 <button onclick="logout()">
+
 Logout
+
 </button>
 
 
+
 </div>
+
+
+
 
 
 
@@ -194,13 +246,18 @@ Logout
 
 <script>
 
+
 setTimeout(()=>{
+
 
 document.getElementById("loader").style.display="none";
 
+
 document.getElementById("shop").style.display="block";
 
-},2500);
+
+},2000);
+
 
 
 </script>
