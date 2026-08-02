@@ -1,13 +1,15 @@
 import { initializeApp } 
 from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
-import { 
+
+import {
 getAuth,
 createUserWithEmailAndPassword,
 signInWithEmailAndPassword,
 signOut
-} 
+}
 from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
 
 import {
 getFirestore,
@@ -15,25 +17,26 @@ collection,
 addDoc,
 getDocs,
 deleteDoc,
-doc
+doc,
+updateDoc
 }
 from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 
 
-const firebaseConfig = {
+const firebaseConfig={
 
-apiKey: "AIzaSyDLWjVuuRU2HB7agBy1D0W5jzuDl2jJkB4",
+apiKey:"AIzaSyDLWjVuuRU2HB7agBy1D0W5jzuDl2jJkB4",
 
-authDomain: "digital-shop-ebea5.firebaseapp.com",
+authDomain:"digital-shop-ebea5.firebaseapp.com",
 
-projectId: "digital-shop-ebea5",
+projectId:"digital-shop-ebea5",
 
-storageBucket: "digital-shop-ebea5.firebasestorage.app",
+storageBucket:"digital-shop-ebea5.firebasestorage.app",
 
-messagingSenderId: "643413206306",
+messagingSenderId:"643413206306",
 
-appId: "1:643413206306:web:c232968f4dca8fbf0d317b"
+appId:"1:643413206306:web:c232968f4dca8fbf0d317b"
 
 };
 
@@ -51,6 +54,7 @@ const db=getFirestore(app);
 
 
 
+// REGISTER
 
 window.register=function(){
 
@@ -59,28 +63,29 @@ let email=document.getElementById("user").value;
 let password=document.getElementById("pass").value;
 
 
-createUserWithEmailAndPassword(
-auth,email,password
-)
+createUserWithEmailAndPassword(auth,email,password)
 
 .then(()=>{
 
 alert("Account Created ✅");
 
-openDashboard(email);
+showDashboard(email);
 
-loadProductsUser();
+loadProducts();
 
 })
 
-.catch(e=>alert(e.message));
 
+.catch(e=>alert(e.message));
 
 }
 
 
 
 
+
+
+// LOGIN
 
 window.login=function(){
 
@@ -89,9 +94,7 @@ let email=document.getElementById("user").value;
 let password=document.getElementById("pass").value;
 
 
-signInWithEmailAndPassword(
-auth,email,password
-)
+signInWithEmailAndPassword(auth,email,password)
 
 .then(()=>{
 
@@ -99,18 +102,20 @@ auth,email,password
 alert("Login Success 🎉");
 
 
-openDashboard(email);
+showDashboard(email);
 
 
-loadProductsUser();
+loadProducts();
 
 
 
 if(email===adminEmail){
 
-document.getElementById("adminPanel").style.display="block";
+adminPanel.style.display="block";
 
 loadAdminProducts();
+
+loadBalanceRequests();
 
 }
 
@@ -125,57 +130,62 @@ loadAdminProducts();
 
 
 
-function openDashboard(email){
 
-document.getElementById("shop").style.display="none";
+function showDashboard(email){
 
-document.getElementById("dashboard").style.display="block";
+shop.style.display="none";
 
-document.getElementById("username").innerHTML=email;
+dashboard.style.display="block";
+
+username.innerHTML=email;
 
 }
 
 
 
 
+
+
+// LOGOUT
 
 window.logout=function(){
 
-signOut(auth)
+signOut(auth).then(()=>{
 
-.then(()=>{
+dashboard.style.display="none";
 
-document.getElementById("dashboard").style.display="none";
+shop.style.display="block";
 
-document.getElementById("shop").style.display="block";
-
-alert("Logout ✅");
 
 });
 
+}
 
-}// ================= ADD PRODUCT =================
+
+
+
+
+
+
+// ADD PRODUCT
 
 window.addProduct=function(){
 
-let name=document.getElementById("pname").value;
-let price=document.getElementById("pprice").value;
-let image=document.getElementById("pimage").value;
 
+let name=pname.value;
 
-if(name=="" || price==""){
+let price=pprice.value;
 
-alert("Fill Product Info");
+let image=pimage.value;
 
-return;
-
-}
 
 
 addDoc(collection(db,"products"),{
 
 name:name,
+
 price:Number(price),
+
 image:image
 
 })
@@ -186,7 +196,68 @@ alert("Product Added ✅");
 
 loadAdminProducts();
 
-loadProductsUser();
+loadProducts();
+
+
+});
+
+}
+
+
+
+
+
+
+// SHOW PRODUCTS USER
+
+function loadProducts(){
+
+
+let box=document.getElementById("products");
+
+
+if(!box)return;
+
+
+box.innerHTML="";
+
+
+getDocs(collection(db,"products"))
+
+.then(s=>{
+
+
+s.forEach(item=>{
+
+
+let p=item.data();
+
+
+box.innerHTML+=`
+
+<div class="card">
+
+<img src="${p.image}">
+
+<h3>${p.name}</h3>
+
+<p>Price: ৳${p.price}</p>
+
+
+<button onclick="addCart('${p.name}',${p.price})">
+
+Add Cart 🛒
+
+</button>
+
+
+</div>
+
+`;
+
+
+});
+
 
 });
 
@@ -197,13 +268,12 @@ loadProductsUser();
 
 
 
+// ADMIN PRODUCTS
 
-// ================= ADMIN PRODUCTS =================
-
-
-window.loadAdminProducts=function(){
+function loadAdminProducts(){
 
 let box=document.getElementById("adminProducts");
+
 
 if(!box)return;
 
@@ -213,27 +283,25 @@ box.innerHTML="";
 
 getDocs(collection(db,"products"))
 
-.then(snapshot=>{
+.then(s=>{
 
 
-snapshot.forEach(item=>{
+s.forEach(item=>{
 
 
-let data=item.data();
+let p=item.data();
 
 
 box.innerHTML+=`
 
 <div class="card">
 
-<img src="${data.image}" width="100%">
+<h3>${p.name}</h3>
 
-<h3>${data.name}</h3>
-
-<p>$${data.price}</p>
+<p>৳${p.price}</p>
 
 
-<button onclick="window.removeProduct('${item.id}')">
+<button onclick="deleteProduct('${item.id}')">
 
 Delete ❌
 
@@ -257,92 +325,16 @@ Delete ❌
 
 
 
-
-
-// ================= USER PRODUCTS =================
-
-
-window.loadProductsUser=function(){
-
-let box=document.getElementById("products");
-
-if(!box)return;
-
-
-box.innerHTML="";
-
-
-getDocs(collection(db,"products"))
-
-.then(snapshot=>{
-
-
-snapshot.forEach(item=>{
-
-
-let data=item.data();
-
-
-box.innerHTML+=`
-
-<div class="card">
-
-
-<img src="${data.image}" width="100%">
-
-
-<h3>${data.name}</h3>
-
-
-<p>Price: $${data.price}</p>
-
-
-
-<button onclick="window.addCart('${data.name}',${data.price})">
-
-Add Cart 🛒
-
-</button>
-
-
-
-</div>
-
-`;
-
-
-});
-
-
-});
-
-
-}
-
-
-
-
-
-
-
-// ================= DELETE =================
-
-
-window.removeProduct=function(id){
+window.deleteProduct=function(id){
 
 
 deleteDoc(doc(db,"products",id))
 
 .then(()=>{
 
-
-alert("Deleted ✅");
-
-
 loadAdminProducts();
 
-loadProductsUser();
-
+loadProducts();
 
 });
 
@@ -355,12 +347,10 @@ loadProductsUser();
 
 
 
-
-// ================= CART =================
+// CART
 
 
 let cart=[];
-
 
 
 window.addCart=function(name,price){
@@ -378,7 +368,42 @@ price:Number(price)
 showCart();
 
 
-alert(name+" Added To Cart ✅");
+alert("Added ✅");
+
+
+}
+
+
+
+
+function showCart(){
+
+
+cartItems.innerHTML="";
+
+
+let total=0;
+
+
+cart.forEach(i=>{
+
+
+total+=i.price;
+
+
+cartItems.innerHTML+=`
+
+<p>${i.name} - ৳${i.price}</p>
+
+`;
+
+
+});
+
+
+cartCount.innerHTML=cart.length;
+
+total.innerHTML=total;
 
 
 }
@@ -387,47 +412,102 @@ alert(name+" Added To Cart ✅");
 
 
 
-function showCart(){
+
+// BALANCE REQUEST
 
 
-let box=document.getElementById("cartItems");
-
-let count=document.getElementById("cartCount");
-
-let totalBox=document.getElementById("total");
+window.requestBalance=function(){
 
 
-if(!box)return;
+let amount=document.getElementById("amount").value;
+
+let number=document.getElementById("payNumber").value;
+
+let trx=document.getElementById("trxId").value;
+
+let method=document.getElementById("method").value;
+
+
+
+addDoc(collection(db,"balanceRequests"),{
+
+
+amount:Number(amount),
+
+number:number,
+
+trx:trx,
+
+method:method,
+
+status:"pending"
+
+
+})
+
+
+.then(()=>{
+
+alert("Request Sent ✅");
+
+});
+
+
+}
+
+
+
+
+
+
+
+// ADMIN BALANCE REQUEST
+
+
+function loadBalanceRequests(){
+
+
+let box=document.getElementById("balanceRequests");
+
+
+getDocs(collection(db,"balanceRequests"))
+
+.then(s=>{
 
 
 box.innerHTML="";
 
 
-let total=0;
+s.forEach(item=>{
 
 
-
-cart.forEach((item,index)=>{
-
-
-total += item.price;
-
+let d=item.data();
 
 
 box.innerHTML+=`
 
-<div class="product">
+<div class="card">
 
 
-<h4>${item.name}</h4>
+<p>
+${d.method} 
+${d.number}
+</p>
 
 
-<p>$${item.price}</p>
+<p>
+Amount: ৳${d.amount}
+</p>
 
 
-<button onclick="removeCart(${index})">
+<p>
+TRX: ${d.trx}
+</p>
 
-Remove ❌
+
+<button onclick="approve('${item.id}')">
+
+Approve ✅
 
 </button>
 
@@ -440,10 +520,7 @@ Remove ❌
 });
 
 
-
-count.innerHTML=cart.length;
-
-totalBox.innerHTML=total;
+});
 
 
 }
@@ -452,11 +529,26 @@ totalBox.innerHTML=total;
 
 
 
-window.removeCart=function(index){
+window.approve=function(id){
 
-cart.splice(index,1);
 
-showCart();
+updateDoc(doc(db,"balanceRequests",id),{
+
+
+status:"approved"
+
+
+})
+
+.then(()=>{
+
+alert("Approved ✅");
+
+loadBalanceRequests();
+
+
+});
+
 
 }
 
@@ -466,29 +558,10 @@ showCart();
 
 
 
-// ================= ORDER =================
-
+// ORDER
 
 window.placeOrder=function(){
 
-
-let name=document.getElementById("cname").value;
-
-let phone=document.getElementById("phone").value;
-
-let address=document.getElementById("address").value;
-
-
-if(name=="" || phone=="" || address==""){
-
-alert("Fill Checkout Info");
-
-return;
+alert("Order Placed ✅");
 
 }
-
-
-alert("Order Placed Successfully ✅");
-
-
-  }
