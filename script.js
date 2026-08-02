@@ -67,13 +67,27 @@ let password=document.getElementById("pass").value;
 
 createUserWithEmailAndPassword(auth,email,password)
 
-.then(()=>{
+.thenthen(async(userCredential)=>{
+
+let user=userCredential.user;
+
+
+await setDoc(doc(db,"users",user.uid),{
+
+email:email,
+
+balance:0
+
+});
+
 
 alert("Account Created ✅");
 
 showDashboard(email);
 
 loadProducts();
+
+
 
 })
 
@@ -140,7 +154,24 @@ document.getElementById("username").innerHTML=email;
 
 }
 
+async function loadBalance(){
 
+let user=auth.currentUser;
+
+if(!user)return;
+
+
+let snap=await getDoc(doc(db,"users",user.uid));
+
+
+if(snap.exists()){
+
+document.getElementById("balance").innerHTML =
+snap.data().balance;
+
+}
+
+}
 
 
 
@@ -802,3 +833,4 @@ showCart();
 
 
 }
+
