@@ -16,26 +16,23 @@
 <div class="loader" id="loader"></div>
 
 
-
 <!-- LOGIN -->
 
 <div class="container" id="shop">
 
 <h1>🛒 Digital Shop</h1>
 
+
 <input id="user" placeholder="Email">
+
 
 <input id="pass" type="password" placeholder="Password">
 
 
-<button onclick="login()">
-Login
-</button>
+<button onclick="login()">Login</button>
 
 
-<button onclick="register()">
-Register
-</button>
+<button onclick="register()">Register</button>
 
 
 </div>
@@ -61,13 +58,11 @@ Welcome:
 
 <div class="balance">
 
-💰 Balance: $
-
-<span id="balance">
-0
-</span>
+💰 Balance: ৳
+<span id="balance">0</span>
 
 </div>
+
 
 
 
@@ -75,9 +70,7 @@ Welcome:
 <h2>🛍️ Products</h2>
 
 
-<div id="products">
-
-</div>
+<div id="products"></div>
 
 
 
@@ -94,34 +87,78 @@ Welcome:
 
 <div id="cartItems">
 
-No items added
+No Items
 
 </div>
 
 
-
 <p>
-
 Items:
-<span id="cartCount">
-0
-</span>
-
+<span id="cartCount">0</span>
 </p>
 
 
 <p>
-
-Total: $
-
-<span id="total">
-0
-</span>
-
+Total: ৳
+<span id="total">0</span>
 </p>
 
 
 </div>
+
+
+
+
+
+
+
+<!-- ADD BALANCE -->
+
+<div class="checkout">
+
+
+<h2>💰 Add Balance</h2>
+
+
+<p>
+Send Money:
+</p>
+
+
+<p>
+bKash/Nagad: <b>01876872469</b>
+</p>
+
+
+
+<input id="amount" placeholder="Amount">
+
+
+<input id="payNumber" placeholder="Your bKash/Nagad Number">
+
+
+<input id="trxId" placeholder="Transaction ID">
+
+
+<select id="method">
+
+<option>bKash</option>
+
+<option>Nagad</option>
+
+</select>
+
+
+
+<button onclick="requestBalance()">
+
+Submit Request ✅
+
+</button>
+
+
+</div>
+
 
 
 
@@ -131,37 +168,20 @@ Total: $
 
 <!-- CHECKOUT -->
 
+
 <div class="checkout">
 
 
-<h2>🧾 Checkout</h2>
+<h2>🧾 Order Checkout</h2>
 
 
-<input id="cname" placeholder="Your Name">
+<input id="cname" placeholder="Name">
 
 
-<input id="phone" placeholder="Phone Number">
+<input id="phone" placeholder="Phone">
 
 
 <input id="address" placeholder="Address">
-
-
-
-<select id="payment">
-
-
-<option>
-Cash on Delivery
-</option>
-
-
-<option>
-Mobile Banking
-</option>
-
-
-</select>
-
 
 
 <button onclick="placeOrder()">
@@ -169,7 +189,6 @@ Mobile Banking
 Place Order ✅
 
 </button>
-
 
 
 </div>
@@ -189,14 +208,17 @@ Place Order ✅
 <h1>👑 Admin Panel</h1>
 
 
+
+<h3>Add Product</h3>
+
+
 <input id="pname" placeholder="Product Name">
 
 
-<input id="pprice" placeholder="Product Price">
+<input id="pprice" placeholder="Price">
 
 
 <input id="pimage" placeholder="Image URL">
-
 
 
 <button onclick="addProduct()">
@@ -207,27 +229,31 @@ Add Product ➕
 
 
 
-<h3>
-Products
-</h3>
+
+<h3>Products</h3>
+
+
+<div id="adminProducts"></div>
 
 
 
-<div id="adminProducts">
+
+<h3>💰 Balance Requests</h3>
+
+
+<div id="balanceRequests"></div>
+
+
 
 </div>
 
 
 
-</div>
 
 
 
 
-
-
-
-<button onclick="logout()">
+<button onclick="logout">
 
 Logout
 
@@ -249,15 +275,12 @@ Logout
 
 setTimeout(()=>{
 
+loader.style.display="none";
 
-document.getElementById("loader").style.display="none";
-
-
-document.getElementById("shop").style.display="block";
+shop.style.display="block";
 
 
 },2000);
-
 
 
 </script>
