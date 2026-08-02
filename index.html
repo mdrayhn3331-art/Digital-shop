@@ -1,49 +1,555 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Digital Shop Login</title>
-    <link rel="stylesheet" href="style.css">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Digital Shop</title>
+
+<link rel="icon" href="logo.png">
+
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+
+body{
+font-family:Arial;
+background:#f3f5f7;
+margin:0;
+padding:15px;
+padding-bottom:80px;
+}
+
+
+h1,h2{
+text-align:center;
+}
+
+
+.header{
+
+background:#0066ff;
+color:white;
+padding:15px;
+border-radius:0 0 15px 15px;
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+font-size:22px;
+font-weight:bold;
+
+}
+
+
+.card{
+
+background:white;
+padding:15px;
+margin:10px 0;
+border-radius:12px;
+box-shadow:0 3px 10px #ddd;
+
+}
+
+
+input,select{
+
+width:100%;
+padding:12px;
+margin:7px 0;
+
+border:1px solid #ccc;
+border-radius:8px;
+
+}
+
+
+button{
+
+width:100%;
+padding:12px;
+margin:7px 0;
+
+background:#0066ff;
+color:white;
+
+border:none;
+border-radius:8px;
+
+font-size:16px;
+
+}
+
+
+img{
+
+width:100%;
+max-width:200px;
+border-radius:10px;
+
+}
+
+
+
+#dashboard,
+#adminPanel{
+
+display:none;
+
+}
+
+
+
+
+#products{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:10px;
+
+}
+
+
+
+
+/* SPLASH */
+
+
+#splash{
+
+position:fixed;
+top:0;
+left:0;
+right:0;
+bottom:0;
+
+background:#0066ff;
+color:white;
+
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+
+z-index:9999;
+
+}
+
+
+.splash-logo{
+
+font-size:70px;
+
+}
+
+
+.loader{
+
+width:45px;
+height:45px;
+
+border:5px solid white;
+border-top:5px solid transparent;
+
+border-radius:50%;
+
+animation:spin 1s infinite linear;
+
+}
+
+
+@keyframes spin{
+
+100%{
+
+transform:rotate(360deg);
+
+}
+
+}
+
+
+
+/* BOTTOM MENU */
+
+
+.bottom-menu{
+
+position:fixed;
+
+bottom:0;
+
+left:0;
+right:0;
+
+background:white;
+
+display:flex;
+
+justify-content:space-around;
+
+padding:8px;
+
+box-shadow:0 -2px 10px #ddd;
+
+}
+
+
+.bottom-menu button{
+
+background:white;
+color:#0066ff;
+
+width:30%;
+
+font-size:13px;
+
+}
+
+
+</style>
+
+
 </head>
+
+
 
 <body>
 
-<div class="box">
 
-<h2>Digital Shop</h2>
 
-<div id="loginBox">
-<h3>Login</h3>
+<!-- SPLASH -->
 
-<input id="loginEmail" type="email" placeholder="Email">
-<input id="loginPassword" type="password" placeholder="Password">
+<div id="splash">
 
-<button onclick="login()">Login</button>
+<div class="splash-logo">
+🛒
+</div>
 
-<p onclick="showRegister()">Create Account</p>
-<p onclick="forgotPassword()">Forgot Password?</p>
+<h1>
+Digital Shop
+</h1>
+
+<div class="loader"></div>
+
+<p>
+Loading...
+</p>
 
 </div>
 
 
-<div id="registerBox" style="display:none">
 
-<h3>Register</h3>
 
-<input id="regName" placeholder="Name">
-<input id="regEmail" type="email" placeholder="Email">
-<input id="regPassword" type="password" placeholder="Password">
+<!-- HEADER -->
 
-<button onclick="register()">Register</button>
 
-<p onclick="showLogin()">Already have account?</p>
+<div class="header">
+
+<div>
+🛒 Digital Shop
+</div>
+
+<div>
+👤
+</div>
 
 </div>
 
 
+
+
+
+<!-- SHOP -->
+
+
+<div id="shop">
+
+
+<h2>Login / Register</h2>
+
+
+<input id="user" placeholder="Email">
+
+
+<input id="pass" type="password" placeholder="Password">
+
+
+
+<button onclick="login()">
+Login
+</button>
+
+
+<button onclick="register()">
+Register
+</button>
+
+
+<button onclick="forgotPassword()">
+Forgot Password
+</button>
+
+
+
+<hr>
+
+
+<h2>Products</h2>
+
+
+<div id="products"></div>
+
+
 </div>
+
+
+
+
+
+
+<!-- DASHBOARD -->
+
+
+<div id="dashboard">
+
+
+<h2>Account</h2>
+
+
+<p id="username"></p>
+
+
+<h3>
+Balance: ৳<span id="balance">0</span>
+</h3>
+
+
+
+<button onclick="logout()">
+Logout
+</button>
+
+
+
+
+<h2>🛒 Cart</h2>
+
+
+<p>
+Items:
+<span id="cartCount">0</span>
+</p>
+
+
+<div id="cartItems"></div>
+
+
+<h3>
+Total ৳<span id="total">0</span>
+</h3>
+
+
+
+
+<h2>Checkout</h2>
+
+
+<input id="cname" placeholder="Name">
+
+<input id="phone" placeholder="Phone">
+
+<input id="address" placeholder="Address">
+
+
+<button onclick="placeOrder()">
+Order Now ✅
+</button>
+
+
+
+
+
+<hr>
+
+
+
+<h2>💰 Add Balance</h2>
+
+
+<p>
+
+bKash / Nagad Number:
+
+<b>
+01876872469
+</b>
+
+</p>
+
+
+
+<select id="method">
+
+<option>
+bKash
+</option>
+
+<option>
+Nagad
+</option>
+
+</select>
+
+
+<input id="amount" placeholder="Amount">
+
+
+<input id="payNumber" placeholder="Your Number">
+
+
+<input id="trxId" placeholder="Transaction ID">
+
+
+
+<button onclick="requestBalance()">
+
+Send Payment Request
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- ADMIN -->
+
+
+<div id="adminPanel">
+
+
+<h2>
+👑 Admin Panel
+</h2>
+
+
+
+<input id="pname" placeholder="Product Name">
+
+
+<input id="pprice" placeholder="Price">
+
+
+<input id="pimage" placeholder="Image URL">
+
+
+
+<button onclick="addProduct()">
+
+Add Product
+
+</button>
+
+
+
+<h3>
+Products
+</h3>
+
+
+<div id="adminProducts"></div>
+
+
+
+
+<h3>
+Payment Requests
+</h3>
+
+
+<div id="balanceRequests"></div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- BOTTOM MENU -->
+
+
+<div class="bottom-menu">
+
+
+<button onclick="showHome()">
+
+🏠
+<br>
+Home
+
+</button>
+
+
+
+<button onclick="showCart()">
+
+🛒
+<br>
+Cart
+
+</button>
+
+
+
+<button onclick="showDashboard()">
+
+👤
+<br>
+Account
+
+</button>
+
+
+</div>
+
+
+
 
 
 <script type="module" src="app.js"></script>
 
+
+
+<script>
+
+setTimeout(()=>{
+
+document.getElementById("splash").style.display="none";
+
+},2000);
+
+
+</script>
+
+
+
 </body>
+
 </html>
